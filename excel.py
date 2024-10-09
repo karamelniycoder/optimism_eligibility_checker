@@ -36,15 +36,18 @@ class Excel:
                 workbook = load_workbook('results/'+self.file_name)
                 sheet = workbook.active
 
-                sheet.append([*wallet_data])
+                for w in wallet_data: sheet.append(w)
 
-                for row_cells in sheet.iter_rows(min_row=sheet.max_row, max_row=sheet.max_row):
+                for row_cells in sheet.iter_rows(min_row=2, max_row=sheet.max_row):
                     for cell in row_cells:
-                        cell.border = Border(left=Side(style='thin'), right=Side(style='thin'))
-                        if cell.column == 2 and cell.value:
-                            if cell.value == "Eligible": rgb_color = "00FF00"
-                            else: rgb_color = "FF0000"
-                            cell.fill = PatternFill(patternType='solid', fgColor=Color(rgb=rgb_color))
+                        if cell.column <= 3:
+                            cell.border = Border(left=Side(style='thin'), right=Side(style='thin'))
+                            if cell.column == 2 and cell.value:
+                                if cell.value == "Eligible": rgb_color = "00FF00"
+                                else: rgb_color = "FF0000"
+                                cell.fill = PatternFill(patternType='solid', fgColor=Color(rgb=rgb_color))
+                        elif cell.column in [4, 5]:
+                            cell.font = Font(bold=True)
 
                 workbook.save('results/'+self.file_name)
                 return True

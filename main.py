@@ -27,6 +27,7 @@ if __name__ == "__main__":
 
     total_tokens = 0
     total_eligibility = 0
+    wallets = []
     for address in addresses:
         tokens_reward = zk_addresses.get(address.lower(), 0)
         total_tokens += tokens_reward
@@ -35,7 +36,7 @@ if __name__ == "__main__":
             total_eligibility += 1
         else:
             logger.error(f'[-] {address} NOT ELIGIBLE')
-        excel.edit_table(wallet_data=[
+        wallets.append([
             address,
             "Eligible" if tokens_reward else "Not Eligible",
             tokens_reward
@@ -45,8 +46,9 @@ if __name__ == "__main__":
     total_tokens = round(total_tokens, 2)
     eligible_count = f'[{total_eligibility}/{len(addresses)}]'
 
-    excel.edit_table(wallet_data=[f"Total eligible addresses: {eligible_count}"])
-    excel.edit_table(wallet_data=[f"Total tokens: {total_tokens} $OP"])
+    wallets[0] += ["", f"Total tokens: {total_tokens} $OP"]
+    wallets[1] += ["", f"Total eligible addresses: {eligible_count}"]
+    excel.edit_table(wallet_data=wallets)
 
     sleep(0.1)
     print('')
